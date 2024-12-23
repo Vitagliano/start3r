@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ConnectButton as RainbowConnectButton } from "@rainbow-me/rainbowkit";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export const ConnectButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,6 @@ export const ConnectButton = () => {
       {({
         account,
         chain,
-        openAccountModal,
         openChainModal,
         openConnectModal,
         authenticationStatus,
@@ -68,40 +67,6 @@ export const ConnectButton = () => {
               }
               return (
                 <div style={{ display: "flex", gap: 12 }}>
-                  <Button
-                    onClick={openChainModal}
-                    style={{ display: "flex", alignItems: "center" }}
-                    type="button"
-                  >
-                    {chain.hasIcon && (
-                      <div
-                        style={{
-                          background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4,
-                        }}
-                      >
-                        {chain.iconUrl && (
-                          <img
-                            alt={chain.name ?? "Chain icon"}
-                            src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {chain.name}
-                  </Button>
-                  <Button onClick={openAccountModal} type="button">
-                    {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
-                  </Button>
-
                   <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -110,17 +75,17 @@ export const ConnectButton = () => {
                       >
                         <div className="flex items-center gap-2">
                           <div className="h-6 w-6 flex items-center justify-center">
-                            <Jazzicon 
+                            <Jazzicon
                               seed={jsNumberForAddress(account.address)}
                             />
                           </div>
                           <span>{account.displayName}</span>
                         </div>
-                        {/* <ChevronDown
+                        <ChevronDown
                           className={`ml-2 h-4 w-4 transition-transform ${
                             isOpen ? "rotate-180" : ""
                           }`}
-                        /> */}
+                        />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
