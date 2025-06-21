@@ -21,7 +21,7 @@ export default async function Image() {
         <h2 tw="text-4xl">{siteConfig.description}</h2>
         <div tw="flex flex-col items-center justify-center mt-8">
           <div tw="text-xl">
-            Next.js · Ethereum · Viem · Wagmi · Web3Modal · SIWE
+            Next.js · Ethereum · Privy · Viem · Avalanche
           </div>
           <div tw="text-xl mt-2">Tailwind · Shadcn UI · and more..</div>
         </div>
