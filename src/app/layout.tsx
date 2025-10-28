@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import "./globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
 
 import { siteConfig } from "@/lib/site";
 import { ThemeProvider } from "next-themes";

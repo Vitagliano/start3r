@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { Address, formatEther } from "viem";
 import { useWatchBalance } from "@/hooks/use-watch-balance";
-import { useAccount } from "wagmi";
+import { useWallets } from "@privy-io/react-auth";
 
 interface Token {
   id: string;
@@ -71,7 +71,8 @@ export const TokenSelector = () => {
   const [selectedToken, setSelectedToken] = React.useState<Token>(tokens[0]);
   const [search, setSearch] = React.useState("");
 
-  const { address } = useAccount();
+  const { wallets } = useWallets();
+  const address = wallets && wallets.length > 0 ? wallets[0]?.address as Address : undefined;
 
   const { data: nativeBalanceData } = useWatchBalance({
     address: address as Address,
@@ -91,10 +92,10 @@ export const TokenSelector = () => {
     );
   }, [search]);
 
-  const nativeBalance = nativeBalanceData?.value;
-  const nativeSymbol = nativeBalanceData?.symbol;
-  const erc20Balance = erc20BalanceData?.value;
-  const erc20Symbol = erc20BalanceData?.symbol;
+  const nativeBalance = address ? nativeBalanceData?.value : null;
+  const nativeSymbol = address ? nativeBalanceData?.symbol : '';
+  const erc20Balance = address ? erc20BalanceData?.value : null;
+  const erc20Symbol = address ? erc20BalanceData?.symbol : '';
 
   const balanceDisplay = React.useMemo(() => {
     const balance =
