@@ -67,3 +67,48 @@ export function generateMockNFTs(address: string) {
     }
   })
 }
+
+export function generateMockApprovals() {
+  return [
+    {
+      id: "1",
+      token: "USDC",
+      spender: "0x1234...5678",
+      spenderName: "Uniswap V3",
+      amount: "Unlimited",
+      type: "ERC20" as const,
+      approvedAt: "2024-01-15",
+      risk: "low" as const,
+    },
+    {
+      id: "2",
+      token: "ETH",
+      spender: "0xabcd...efgh",
+      spenderName: "OpenSea",
+      amount: "All NFTs",
+      type: "ERC721" as const,
+      approvedAt: "2024-02-20",
+      risk: "medium" as const,
+    },
+    {
+      id: "3",
+      token: "DAI",
+      spender: "0x9876...5432",
+      spenderName: "Unknown Contract",
+      amount: "Unlimited",
+      type: "ERC20" as const,
+      approvedAt: "2023-12-01",
+      risk: "high" as const,
+    },
+    {
+      id: "4",
+      token: "LINK",
+      spender: "0x5555...6666",
+      spenderName: "1inch",
+      amount: "1000",
+      type: "ERC20" as const,
+      approvedAt: "2024-03-10",
+      risk: "low" as const,
+    },
+  ]
+}

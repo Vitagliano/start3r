@@ -1,17 +1,36 @@
-import { MintNFT } from "@/components/web3/mint-nft"
-import { Card, CardContent } from "@/components/ui/card"
-import { CodeSection } from "@/components/code/CodeSection"
+import { MintNFT } from "@/components/web3/mint-nft";
+import { Card, CardContent } from "@/components/ui/card";
+import { CodeSection } from "@/components/code/CodeSection";
 
 export default function MintPage() {
   return (
     <>
       <header className="mb-6 space-y-2 md:mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-balance sm:text-3xl">Mint NFT</h1>
-        <p className="text-sm text-muted-foreground text-pretty sm:text-base">Mint NFTs from verified collections</p>
+        <h1 className="text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+          Mint NFT
+        </h1>
+        <p className="text-sm text-muted-foreground text-pretty sm:text-base">
+          Mint NFTs from verified collections
+        </p>
       </header>
 
       <div className="animate-in fade-in duration-300">
-        <MintNFT />
+        <MintNFT
+          collectionName="Cool Cats NFT"
+          collectionSymbol="COOLCAT"
+          description="A collection of 10,000 unique Cool Cats living on the Ethereum blockchain."
+          contractAddress="0x1A92f7381B9F03921564a437210bB9396471050C"
+          creatorName="Cool Cats Team"
+          creatorAvatar="/placeholder.svg?height=40&width=40"
+          price={0.08}
+          totalSupply={10000}
+          minted={7500}
+          userMinted={0}
+          maxPerWallet={10}
+          maxPerTx={5}
+          salePhase="public"
+          isVerified={true}
+        />
       </div>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -48,5 +67,5 @@ export default function MintPage() {
         file="src/components/web3/mint-nft.tsx"
       />
     </>
-  )
+  );
 }

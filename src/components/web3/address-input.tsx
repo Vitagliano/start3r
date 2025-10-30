@@ -11,20 +11,25 @@ import { CheckCircle2 } from "lucide-react"
 import { MagnifyingGlassIcon, ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
 import { useEnsAddress } from "wagmi"
 
+interface ExampleAddress {
+  label: string
+  address: string
+  type: string
+}
+
 interface AddressInputProps {
   onAddressSubmit: (address: string) => void
   isLoading: boolean
   currentAddress: string | null
+  exampleAddresses?: ExampleAddress[]
 }
 
-const EXAMPLE_ADDRESSES = [
-  { label: "vitalik.eth", address: "vitalik.eth", type: "ENS" },
-  { label: "Uniswap", address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984", type: "Contract" },
-  { label: "USDC Treasury", address: "0x55FE002aefF02F77364de339a1292923A15844B8", type: "Treasury" },
-  { label: "Example Wallet", address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb", type: "Wallet" },
-]
-
-export function AddressInput({ onAddressSubmit, isLoading, currentAddress }: AddressInputProps) {
+export function AddressInput({
+  onAddressSubmit,
+  isLoading,
+  currentAddress,
+  exampleAddresses = []
+}: AddressInputProps) {
   const [address, setAddress] = useState("")
   const [validationState, setValidationState] = useState<"idle" | "valid" | "invalid">("idle")
 
@@ -81,7 +86,7 @@ export function AddressInput({ onAddressSubmit, isLoading, currentAddress }: Add
         <div className="space-y-3">
           <div className="text-sm font-medium">Try these examples:</div>
           <div className="flex flex-wrap gap-2">
-            {EXAMPLE_ADDRESSES.map((example) => (
+            {exampleAddresses.map((example) => (
               <Badge
                 key={example.address}
                 variant="outline"

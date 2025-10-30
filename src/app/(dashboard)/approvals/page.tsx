@@ -1,17 +1,22 @@
-import { ApprovalsManager } from "@/components/web3/approvals-manager"
-import { Card, CardContent } from "@/components/ui/card"
-import { CodeSection } from "@/components/code/CodeSection"
+import { ApprovalsManager } from "@/components/web3/approvals-manager";
+import { Card, CardContent } from "@/components/ui/card";
+import { CodeSection } from "@/components/code/CodeSection";
+import { generateMockApprovals } from "@/lib/mock-data-generator";
 
 export default function ApprovalsPage() {
   return (
     <>
       <header className="mb-6 space-y-2 md:mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-balance sm:text-3xl">Approvals Manager</h1>
-        <p className="text-sm text-muted-foreground text-pretty sm:text-base">Review and revoke token allowances</p>
+        <h1 className="text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+          Approvals Manager
+        </h1>
+        <p className="text-sm text-muted-foreground text-pretty sm:text-base">
+          Review and revoke token allowances
+        </p>
       </header>
 
       <div className="animate-in fade-in duration-300">
-        <ApprovalsManager />
+        <ApprovalsManager approvals={generateMockApprovals()} />
       </div>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -47,5 +52,5 @@ export default function ApprovalsPage() {
         file="src/components/web3/approvals-manager.tsx"
       />
     </>
-  )
+  );
 }

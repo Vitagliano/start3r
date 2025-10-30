@@ -30,16 +30,32 @@ interface AddressBookEntry {
   ens?: string;
 }
 
-const mockAddressBook: AddressBookEntry[] = [
-  { name: "Alice", address: "0x1234...5678", ens: "alice.eth" },
-  { name: "Bob", address: "0xabcd...efgh", ens: "bob.eth" },
-  { name: "Charlie", address: "0x9876...5432" },
-];
+interface Token {
+  symbol: string;
+  name: string;
+}
 
-export function TransferFlow() {
+interface NFT {
+  id: string;
+  name: string;
+}
+
+interface TransferFlowProps {
+  addressBook?: AddressBookEntry[];
+  tokens?: Token[];
+  nfts?: NFT[];
+}
+
+export function TransferFlow({
+  addressBook = [],
+  tokens = [],
+  nfts = [],
+}: TransferFlowProps) {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
-  const [selectedToken, setSelectedToken] = useState("ETH");
+  const [selectedToken, setSelectedToken] = useState(
+    tokens.length > 0 ? tokens[0].symbol : ""
+  );
   const isEns = useMemo(
     () => /\.[eE][tT][hH]$/.test(recipient || ""),
     [recipient]
@@ -78,10 +94,11 @@ export function TransferFlow() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ETH">ETH - Ethereum</SelectItem>
-                    <SelectItem value="USDC">USDC - USD Coin</SelectItem>
-                    <SelectItem value="UNI">UNI - Uniswap</SelectItem>
-                    <SelectItem value="LINK">LINK - Chainlink</SelectItem>
+                    {tokens.map((token) => (
+                      <SelectItem key={token.symbol} value={token.symbol}>
+                        {token.symbol} - {token.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -118,7 +135,7 @@ export function TransferFlow() {
               <div className="space-y-2">
                 <div className="text-sm font-medium">Quick Select</div>
                 <div className="flex flex-wrap gap-2">
-                  {mockAddressBook.map((entry) => (
+                  {addressBook.map((entry) => (
                     <Button
                       key={entry.address}
                       variant="outline"
@@ -150,9 +167,11 @@ export function TransferFlow() {
                     <SelectValue placeholder="Choose an NFT" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">Cosmic Ape #1234</SelectItem>
-                    <SelectItem value="2">Digital Punk #5678</SelectItem>
-                    <SelectItem value="3">Art Block #9012</SelectItem>
+                    {nfts.map((nft) => (
+                      <SelectItem key={nft.id} value={nft.id}>
+                        {nft.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

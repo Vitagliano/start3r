@@ -37,11 +37,11 @@ export function NftGallery({ nfts: externalNFTs, isLoading = false, hasAddress =
   const [filterCollection, setFilterCollection] = useState("all")
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null)
 
-  const mockNFTs: NFT[] = externalNFTs || []
+  const nfts: NFT[] = externalNFTs || []
 
-  const collections = ["all", ...Array.from(new Set(mockNFTs.map((nft) => nft.collection)))]
+  const collections = ["all", ...Array.from(new Set(nfts.map((nft) => nft.collection)))]
 
-  const filteredNFTs = mockNFTs.filter((nft) => {
+  const filteredNFTs = nfts.filter((nft) => {
     const matchesSearch =
       nft.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       nft.collection.toLowerCase().includes(searchQuery.toLowerCase())

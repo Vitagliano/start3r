@@ -28,10 +28,10 @@ export function TokenPortfolio({ tokens: externalTokens, isLoading = false, hasA
   const [hideSmallBalances, setHideSmallBalances] = useState(false)
   const [showBalances, setShowBalances] = useState(true)
 
-  const mockTokens: Token[] = externalTokens || []
+  const tokens: Token[] = externalTokens || []
 
-  const totalValue = mockTokens.reduce((sum, token) => sum + token.usdValue, 0)
-  const filteredTokens = hideSmallBalances ? mockTokens.filter((token) => token.usdValue >= 100) : mockTokens
+  const totalValue = tokens.reduce((sum, token) => sum + token.usdValue, 0)
+  const filteredTokens = hideSmallBalances ? tokens.filter((token) => token.usdValue >= 100) : tokens
 
   if (!hasAddress && !isLoading) {
     return (

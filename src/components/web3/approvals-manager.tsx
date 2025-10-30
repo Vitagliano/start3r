@@ -20,51 +20,12 @@ interface Approval {
   risk: "low" | "medium" | "high"
 }
 
-const mockApprovals: Approval[] = [
-  {
-    id: "1",
-    token: "USDC",
-    spender: "0x1234...5678",
-    spenderName: "Uniswap V3",
-    amount: "Unlimited",
-    type: "ERC20",
-    approvedAt: "2024-01-15",
-    risk: "low",
-  },
-  {
-    id: "2",
-    token: "ETH",
-    spender: "0xabcd...efgh",
-    spenderName: "OpenSea",
-    amount: "All NFTs",
-    type: "ERC721",
-    approvedAt: "2024-02-20",
-    risk: "medium",
-  },
-  {
-    id: "3",
-    token: "DAI",
-    spender: "0x9876...5432",
-    spenderName: "Unknown Contract",
-    amount: "Unlimited",
-    type: "ERC20",
-    approvedAt: "2023-12-01",
-    risk: "high",
-  },
-  {
-    id: "4",
-    token: "LINK",
-    spender: "0x5555...6666",
-    spenderName: "1inch",
-    amount: "1000",
-    type: "ERC20",
-    approvedAt: "2024-03-10",
-    risk: "low",
-  },
-]
+interface ApprovalsManagerProps {
+  approvals: Approval[]
+}
 
-export function ApprovalsManager() {
-  const [approvals, setApprovals] = useState(mockApprovals)
+export function ApprovalsManager({ approvals: initialApprovals }: ApprovalsManagerProps) {
+  const [approvals, setApprovals] = useState(initialApprovals)
 
   const handleRevoke = (id: string) => {
     setApprovals(approvals.filter((approval) => approval.id !== id))
