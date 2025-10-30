@@ -1,21 +1,11 @@
-import { ConnectButton } from "@/components/connect-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { TokenSelector } from "@/components/token-selector";
+import { HomePage } from "@/components/web3/home-page"
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center h-dvh py-16">
-      <div className="flex items-center justify-center gap-16">
-        <h1 className="text-4xl font-bold">Start3r</h1>
-
-        <div className="flex flex-row items-center justify-center gap-4">
-          <ThemeSwitcher />
-          <ConnectButton />
-        </div>
-      </div>
-      <div className="flex w-full h-full items-center justify-center">
-        <TokenSelector />
-      </div>
+    <div className="min-h-screen bg-background">
+      <main className="mx-auto max-w-7xl p-4 sm:p-6 md:p-8 lg:p-10">
+        <HomePage />
+      </main>
     </div>
-  );
+  )
 }

@@ -26,7 +26,6 @@ Create a `.env.local` file in the root directory with the following variables:
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_ENVIRONMENT=development
-NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_wallet_connect_project_id
 NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
 ```
 

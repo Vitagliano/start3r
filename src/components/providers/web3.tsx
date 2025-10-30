@@ -14,13 +14,10 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
       appId={env.NEXT_PUBLIC_PRIVY_APP_ID}
       config={{
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets'
-        }
-      }}
-    >
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+          ethereum: { createOnLogin: "users-without-wallets" },
+        },
+      }}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </PrivyProvider>
   );
 }

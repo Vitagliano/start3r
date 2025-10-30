@@ -1,62 +1,23 @@
+import type React from "react";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-
+import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-import { siteConfig } from "@/lib/site";
-import { ThemeProvider } from "next-themes";
-import { Web3Provider } from "@/components/providers/web3";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const geistSans = Geist({
+  subsets: ["latin"],
   variable: "--font-geist-sans",
-  weight: "100 900",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
   variable: "--font-geist-mono",
-  weight: "100 900",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url.base),
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  authors: [
-    {
-      name: siteConfig.author,
-      url: siteConfig.url.author,
-    },
-  ],
-  creator: siteConfig.author,
-  appleWebApp: {
-    title: siteConfig.name,
-    capable: true,
-    statusBarStyle: "black-translucent",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteConfig.url.base,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-    images: "/opengraph-image",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: "/opengraph-image",
-    creator: "@gabrielrvita",
-  },
-  icons: {
-    icon: "/favicon.ico",
-  },
+  title: "Start3r",
+  description: "Web3 dashboard for managing tokens, NFTs, and DeFi operations",
+  generator: "v0.app",
 };
 
 export default function RootLayout({
@@ -67,11 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Web3Provider>{children}</Web3Provider>
-        </ThemeProvider>
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        {children}
+        <Analytics />
       </body>
     </html>
   );
