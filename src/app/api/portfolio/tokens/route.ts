@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/env";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
 
 // Define supported networks for the Alchemy API
 export const SUPPORTED_NETWORKS = [
@@ -58,14 +60,57 @@ function isValidAddress(address: string): boolean {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
 
+/**
+ * Validates if a string is a valid ENS name
+ * @param name - The name to validate
+ * @returns boolean
+ */
+function isValidEnsName(name: string): boolean {
+  return /^[a-zA-Z0-9_-]+\.eth$/.test(name);
+}
+
+/**
+ * Resolves an ENS name to an Ethereum address
+ * @param ensName - The ENS name to resolve
+ * @returns Promise<string | null> - The resolved address or null if not found
+ */
+async function resolveEnsName(ensName: string): Promise<string | null> {
+  try {
+    const client = createPublicClient({
+      chain: mainnet,
+      transport: http(),
+    });
+
+    const address = await client.getEnsAddress({
+      name: ensName,
+    });
+
+    return address;
+  } catch (error) {
+    console.error("Error resolving ENS name:", error);
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { address, networks = SUPPORTED_NETWORKS } = await request.json();
 
-    // Validate address format
-    if (!isValidAddress(address)) {
+    let resolvedAddress = address;
+
+    // Handle ENS names
+    if (isValidEnsName(address)) {
+      const resolved = await resolveEnsName(address);
+      if (!resolved) {
+        return NextResponse.json(
+          { error: "Could not resolve ENS name to an Ethereum address" },
+          { status: 400 }
+        );
+      }
+      resolvedAddress = resolved;
+    } else if (!isValidAddress(address)) {
       return NextResponse.json(
-        { error: "Invalid Ethereum address format" },
+        { error: "Invalid Ethereum address or ENS name format" },
         { status: 400 }
       );
     }
@@ -80,7 +125,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         addresses: [
           {
-            address,
+            address: resolvedAddress,
             networks,
           },
         ],

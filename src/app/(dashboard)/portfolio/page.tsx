@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { TokenPortfolio } from "@/components/web3/token-portfolio"
 import { AddressInput } from "@/components/web3/address-input"
-import { fetchTokensByAddress, isValidAddress } from "@/lib/alchemy-api"
+import { fetchTokensByAddress } from "@/lib/alchemy-api"
 import { Card, CardContent } from "@/components/ui/card"
 import { ClientCodeSection } from "@/components/code/ClientCodeSection"
 
@@ -18,11 +18,6 @@ export default function PortfolioPage() {
     setError(null)
 
     try {
-      // Validate address format
-      if (!isValidAddress(address)) {
-        throw new Error('Please enter a valid Ethereum address')
-      }
-
       const fetchedTokens = await fetchTokensByAddress(address)
       setCurrentAddress(address)
       setTokens(fetchedTokens)

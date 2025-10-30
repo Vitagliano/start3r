@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { NftGallery } from "@/components/web3/nft-gallery"
 import { AddressInput } from "@/components/web3/address-input"
-import { fetchNFTsByAddress, isValidAddress } from "@/lib/alchemy-api"
+import { fetchNFTsByAddress } from "@/lib/alchemy-api"
 import { Card, CardContent } from "@/components/ui/card"
 import { ClientCodeSection } from "@/components/code/ClientCodeSection"
 
@@ -18,11 +18,6 @@ export default function NFTsPage() {
     setError(null)
 
     try {
-      // Validate address format
-      if (!isValidAddress(address)) {
-        throw new Error('Please enter a valid Ethereum address')
-      }
-
       const fetchedNfts = await fetchNFTsByAddress(address)
       setCurrentAddress(address)
       setNfts(fetchedNfts)

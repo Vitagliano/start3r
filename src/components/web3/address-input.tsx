@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { CheckCircle2 } from "lucide-react"
 import { MagnifyingGlassIcon, ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
 import { useEnsAddress, useAccount } from "wagmi"
+import { isValidEnsName } from "@/lib/alchemy-api"
 
 interface ExampleAddress {
   label: string
@@ -82,9 +83,7 @@ export function AddressInput({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (validationState === "valid") {
-      // If it's an ENS name and we have a resolved address, use the resolved address
-      const addressToSubmit = resolvedInputAddress || address
-      onAddressSubmit(addressToSubmit)
+      onAddressSubmit(address)
     }
   }
 

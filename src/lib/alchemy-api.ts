@@ -60,7 +60,6 @@ export async function fetchTokensByAddress(
     }
 
     const data = await response.json();
-    console.log("Alchemy API response:", data);
     return data.tokens;
   } catch (error) {
     console.error("Error fetching tokens:", error);

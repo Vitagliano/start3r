@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/env";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
 
 // Define supported networks for the Alchemy NFT API
 const SUPPORTED_NETWORKS = [
@@ -140,6 +142,38 @@ function isValidAddress(address: string): boolean {
 }
 
 /**
+ * Validates if a string is a valid ENS name
+ * @param name - The name to validate
+ * @returns boolean
+ */
+function isValidEnsName(name: string): boolean {
+  return /^[a-zA-Z0-9_-]+\.eth$/.test(name);
+}
+
+/**
+ * Resolves an ENS name to an Ethereum address
+ * @param ensName - The ENS name to resolve
+ * @returns Promise<string | null> - The resolved address or null if not found
+ */
+async function resolveEnsName(ensName: string): Promise<string | null> {
+  try {
+    const client = createPublicClient({
+      chain: mainnet,
+      transport: http(),
+    });
+
+    const address = await client.getEnsAddress({
+      name: ensName,
+    });
+
+    return address;
+  } catch (error) {
+    console.error("Error resolving ENS name:", error);
+    return null;
+  }
+}
+
+/**
  * Fetches NFTs for a specific network
  */
 async function fetchNFTsForNetwork(
@@ -222,29 +256,33 @@ export async function POST(request: NextRequest) {
   try {
     const { address } = await request.json();
 
-    // Validate address format
-    if (!isValidAddress(address)) {
+    let resolvedAddress = address;
+
+    // Handle ENS names
+    if (isValidEnsName(address)) {
+      const resolved = await resolveEnsName(address);
+      if (!resolved) {
+        return NextResponse.json(
+          { error: "Could not resolve ENS name to an Ethereum address" },
+          { status: 400 }
+        );
+      }
+      resolvedAddress = resolved;
+    } else if (!isValidAddress(address)) {
       return NextResponse.json(
-        { error: "Invalid Ethereum address format" },
+        { error: "Invalid Ethereum address or ENS name format" },
         { status: 400 }
       );
     }
 
-    console.log("Fetching NFTs for address:", address);
-    console.log("Networks:", SUPPORTED_NETWORKS);
-
     // Fetch NFTs from all supported networks in parallel
     const networkPromises = SUPPORTED_NETWORKS.map((network) =>
-      fetchNFTsForNetwork(network, address)
+      fetchNFTsForNetwork(network, resolvedAddress)
     );
     const networkResults = await Promise.all(networkPromises);
 
     // Flatten results from all networks
     const allNFTs = networkResults.flat();
-
-    console.log(
-      `Found ${allNFTs.length} NFTs across ${SUPPORTED_NETWORKS.length} networks`
-    );
 
     return NextResponse.json({
       nfts: allNFTs,
