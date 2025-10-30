@@ -3,22 +3,35 @@
 import { useState } from "react"
 import { NftGallery } from "@/components/web3/nft-gallery"
 import { AddressInput } from "@/components/web3/address-input"
-import { generateMockNFTs } from "@/lib/mock-data-generator"
+import { fetchNFTsByAddress, isValidAddress } from "@/lib/alchemy-api"
 import { Card, CardContent } from "@/components/ui/card"
 import { ClientCodeSection } from "@/components/code/ClientCodeSection"
 
 export default function NFTsPage() {
   const [currentAddress, setCurrentAddress] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [mockNFTs, setMockNFTs] = useState<any[]>([])
+  const [nfts, setNfts] = useState<any[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   const handleAddressSubmit = async (address: string) => {
     setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    const nfts = generateMockNFTs(address)
-    setCurrentAddress(address)
-    setMockNFTs(nfts)
-    setIsLoading(false)
+    setError(null)
+
+    try {
+      // Validate address format
+      if (!isValidAddress(address)) {
+        throw new Error('Please enter a valid Ethereum address')
+      }
+
+      const fetchedNfts = await fetchNFTsByAddress(address)
+      setCurrentAddress(address)
+      setNfts(fetchedNfts)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch NFT data')
+      setNfts([])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -32,8 +45,20 @@ export default function NFTsPage() {
         <AddressInput onAddressSubmit={handleAddressSubmit} isLoading={isLoading} currentAddress={currentAddress} />
       </div>
 
+      {error && (
+        <div className="mb-6 animate-in fade-in duration-300">
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-sm text-destructive">
+                <strong>Error:</strong> {error}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <div className="animate-in fade-in duration-300">
-        <NftGallery nfts={mockNFTs} isLoading={isLoading} hasAddress={!!currentAddress} />
+        <NftGallery nfts={nfts} isLoading={isLoading} hasAddress={!!currentAddress} />
       </div>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -41,12 +66,14 @@ export default function NFTsPage() {
           <CardContent className="space-y-2 p-6">
             <h4 className="font-semibold">Features</h4>
             <ul className="space-y-1 text-sm text-muted-foreground">
+              <li>• Real NFT data from Ethereum mainnet via Alchemy API</li>
               <li>• Grid layout with responsive columns</li>
               <li>• Filtering by collection and attributes</li>
-              <li>• Image viewer with attribute display</li>
+              <li>• Image viewer with trait display</li>
               <li>• Transfer capabilities with address book</li>
-              <li>• Address input with ENS resolution</li>
-              <li>• Loading states and empty state handling</li>
+              <li>• Address input with validation</li>
+              <li>• Loading states and error handling</li>
+              <li>• Spam NFT filtering</li>
             </ul>
           </CardContent>
         </Card>

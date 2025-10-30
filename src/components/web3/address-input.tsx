@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle2 } from "lucide-react"
 import { MagnifyingGlassIcon, ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
-import { useEnsAddress } from "wagmi"
+import { useEnsAddress, useAccount } from "wagmi"
 
 interface ExampleAddress {
   label: string
@@ -22,14 +22,23 @@ interface AddressInputProps {
   isLoading: boolean
   currentAddress: string | null
   exampleAddresses?: ExampleAddress[]
+  showConnectedWalletOption?: boolean
 }
+
+const DEFAULT_EXAMPLE_ADDRESSES: ExampleAddress[] = [
+  { label: "vitalik.eth", address: "vitalik.eth", type: "ENS" },
+  { label: "Null Address", address: "0x0000000000000000000000000000000000000000", type: "Address" },
+  { label: "Uniswap", address: "0x1F98431c8aD98523631AE4a59f267346ea31F984", type: "Address" },
+]
 
 export function AddressInput({
   onAddressSubmit,
   isLoading,
   currentAddress,
-  exampleAddresses = []
+  exampleAddresses = DEFAULT_EXAMPLE_ADDRESSES,
+  showConnectedWalletOption = true
 }: AddressInputProps) {
+  const { address: connectedAddress } = useAccount()
   const [address, setAddress] = useState("")
   const [validationState, setValidationState] = useState<"idle" | "valid" | "invalid">("idle")
 
@@ -40,11 +49,18 @@ export function AddressInput({
     query: { enabled: isEns && !!currentAddress }
   })
 
+  const isInputEns = useMemo(() => /\.[eE][tT][hH]$/.test(address), [address])
+  const { data: resolvedInputAddress } = useEnsAddress({
+    name: isInputEns && address ? address : undefined,
+    chainId: 1,
+    query: { enabled: isInputEns && !!address && validationState !== "invalid" }
+  })
+
   const validateAddress = (addr: string) => {
     // Ethereum address validation (0x + 40 hex characters)
     const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/
-    // ENS name validation (basic)
-    const ensRegex = /^[a-z0-9-]+\.eth$/
+    // ENS name validation - allow alphanumeric, hyphens, and underscores, case insensitive
+    const ensRegex = /^[a-zA-Z0-9_-]+\.eth$/
 
     if (ethAddressRegex.test(addr) || ensRegex.test(addr)) {
       setValidationState("valid")
@@ -66,7 +82,9 @@ export function AddressInput({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (validationState === "valid") {
-      onAddressSubmit(address)
+      // If it's an ENS name and we have a resolved address, use the resolved address
+      const addressToSubmit = resolvedInputAddress || address
+      onAddressSubmit(addressToSubmit)
     }
   }
 
@@ -75,6 +93,27 @@ export function AddressInput({
     validateAddress(exampleAddress)
     onAddressSubmit(exampleAddress)
   }
+
+  const handleConnectedWalletClick = () => {
+    if (connectedAddress) {
+      setAddress(connectedAddress)
+      validateAddress(connectedAddress)
+      onAddressSubmit(connectedAddress)
+    }
+  }
+
+  // Combine default examples with connected wallet option if available
+  const allExampleAddresses = useMemo(() => {
+    const examples = [...exampleAddresses]
+    if (showConnectedWalletOption && connectedAddress) {
+      examples.unshift({
+        label: "Connected Wallet",
+        address: connectedAddress,
+        type: "Wallet"
+      })
+    }
+    return examples
+  }, [exampleAddresses, showConnectedWalletOption, connectedAddress])
 
   return (
     <Card>
@@ -86,12 +125,12 @@ export function AddressInput({
         <div className="space-y-3">
           <div className="text-sm font-medium">Try these examples:</div>
           <div className="flex flex-wrap gap-2">
-            {exampleAddresses.map((example) => (
+            {allExampleAddresses.map((example) => (
               <Badge
                 key={example.address}
                 variant="outline"
                 className="cursor-pointer transition-colors hover:bg-primary hover:text-primary-foreground"
-                onClick={() => handleExampleClick(example.address)}
+                onClick={() => example.type === "Wallet" ? handleConnectedWalletClick() : handleExampleClick(example.address)}
               >
                 <span className="font-medium">{example.label}</span>
                 <span className="ml-1.5 text-xs opacity-70">({example.type})</span>

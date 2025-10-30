@@ -1,10 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -12,42 +18,60 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ImageIcon } from "lucide-react"
-import { MagnifyingGlassIcon, PaperPlaneIcon, ReloadIcon } from "@radix-ui/react-icons"
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ImageIcon } from "lucide-react";
+import {
+  MagnifyingGlassIcon,
+  PaperPlaneIcon,
+  ReloadIcon,
+} from "@radix-ui/react-icons";
 
 interface NFT {
-  id: string
-  name: string
-  collection: string
-  image: string
-  attributes: { trait: string; value: string }[]
-  tokenId: string
+  id: string;
+  name: string;
+  collection: string;
+  image: string;
+  attributes: { trait: string; value: string }[];
+  tokenId: string;
 }
 
 interface NftGalleryProps {
-  nfts?: NFT[]
-  isLoading?: boolean
-  hasAddress?: boolean
+  nfts?: NFT[];
+  isLoading?: boolean;
+  hasAddress?: boolean;
 }
 
-export function NftGallery({ nfts: externalNFTs, isLoading = false, hasAddress = false }: NftGalleryProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filterCollection, setFilterCollection] = useState("all")
-  const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null)
+export function NftGallery({
+  nfts: externalNFTs,
+  isLoading = false,
+  hasAddress = false,
+}: NftGalleryProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCollection, setFilterCollection] = useState("all");
+  const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
 
-  const nfts: NFT[] = externalNFTs || []
+  const nfts: NFT[] = externalNFTs || [];
 
-  const collections = ["all", ...Array.from(new Set(nfts.map((nft) => nft.collection)))]
+  const collections = [
+    "all",
+    ...Array.from(new Set(nfts.map((nft) => nft.collection))),
+  ];
 
   const filteredNFTs = nfts.filter((nft) => {
     const matchesSearch =
       nft.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      nft.collection.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCollection = filterCollection === "all" || nft.collection === filterCollection
-    return matchesSearch && matchesCollection
-  })
+      nft.collection.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCollection =
+      filterCollection === "all" || nft.collection === filterCollection;
+    return matchesSearch && matchesCollection;
+  });
 
   if (!hasAddress && !isLoading) {
     return (
@@ -64,7 +88,7 @@ export function NftGallery({ nfts: externalNFTs, isLoading = false, hasAddress =
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (isLoading) {
@@ -83,7 +107,7 @@ export function NftGallery({ nfts: externalNFTs, isLoading = false, hasAddress =
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -123,45 +147,73 @@ export function NftGallery({ nfts: externalNFTs, isLoading = false, hasAddress =
               <DialogTrigger asChild>
                 <button
                   onClick={() => setSelectedNFT(nft)}
-                  className="group overflow-hidden rounded-lg border border-border bg-card transition-all hover:border-primary hover:shadow-lg"
-                >
+                  className="group overflow-hidden rounded-lg border border-border bg-card transition-all hover:border-primary hover:shadow-lg">
                   <div className="aspect-square overflow-hidden">
-                    <img
-                      src={nft.image || "/placeholder.svg"}
-                      alt={nft.name}
-                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                    />
+                    {nft.image && nft.image !== "/placeholder.svg" ? (
+                      <img
+                        src={nft.image}
+                        alt={nft.name}
+                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-black rounded-t-lg" />
+                    )}
                   </div>
                   <div className="space-y-1 p-3">
                     <div className="font-semibold text-sm">{nft.name}</div>
-                    <div className="text-xs text-muted-foreground">{nft.collection}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {nft.collection}
+                    </div>
                   </div>
                 </button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>{selectedNFT?.name}</DialogTitle>
-                  <DialogDescription>{selectedNFT?.collection}</DialogDescription>
+                  <DialogDescription>
+                    {selectedNFT?.collection}
+                  </DialogDescription>
                 </DialogHeader>
                 {selectedNFT && (
                   <div className="space-y-6">
                     <div className="overflow-hidden rounded-lg">
-                      <img src={selectedNFT.image || "/placeholder.svg"} alt={selectedNFT.name} className="w-full" />
+                      {selectedNFT.image &&
+                      selectedNFT.image !== "/placeholder.svg" ? (
+                        <img
+                          src={selectedNFT.image}
+                          alt={selectedNFT.name}
+                          className="w-full"
+                        />
+                      ) : (
+                        <div className="w-full aspect-square bg-black rounded-lg" />
+                      )}
                     </div>
                     <div className="space-y-3">
                       <div>
                         <div className="text-sm font-semibold">Token ID</div>
-                        <div className="font-mono text-sm text-muted-foreground">#{selectedNFT.tokenId}</div>
+                        <div className="font-mono text-sm text-muted-foreground">
+                          #{selectedNFT.tokenId}
+                        </div>
                       </div>
                       <div>
-                        <div className="mb-2 text-sm font-semibold">Attributes</div>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedNFT.attributes.map((attr, idx) => (
-                            <Badge key={idx} variant="secondary">
-                              {attr.trait}: {attr.value}
-                            </Badge>
-                          ))}
+                        <div className="mb-2 text-sm font-semibold">
+                          Attributes
                         </div>
+                        {selectedNFT.attributes.length > 0 ? (
+                          <div className="flex flex-wrap gap-2">
+                            {selectedNFT.attributes.map((attr, idx) => (
+                              <Badge key={idx} variant="secondary">
+                                {attr.trait}: {attr.value}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-16 bg-black rounded-md">
+                            <span className="text-white text-sm">
+                              No Attributes
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <Button className="w-full gap-2">
@@ -176,5 +228,5 @@ export function NftGallery({ nfts: externalNFTs, isLoading = false, hasAddress =
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
