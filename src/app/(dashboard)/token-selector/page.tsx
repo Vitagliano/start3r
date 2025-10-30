@@ -1,4 +1,5 @@
 import { TokenSelectorShowcase } from "@/components/web3/showcases/token-selector-showcase"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function TokenSelectorPage() {
   return (
@@ -13,6 +14,11 @@ export default function TokenSelectorPage() {
       <div className="animate-in fade-in duration-300">
         <TokenSelectorShowcase />
       </div>
+
+      <CodeSection
+        title="Copy the TokenSelector component"
+        file="src/components/web3/token-selector.tsx"
+      />
     </>
   )
 }

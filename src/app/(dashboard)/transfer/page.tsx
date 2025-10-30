@@ -1,5 +1,6 @@
 import { TransferFlow } from "@/components/web3/transfer-flow"
 import { Card, CardContent } from "@/components/ui/card"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function TransferPage() {
   return (
@@ -40,6 +41,11 @@ export default function TransferPage() {
           </CardContent>
         </Card>
       </div>
+
+      <CodeSection
+        title="Copy the TransferFlow component"
+        file="src/components/web3/transfer-flow.tsx"
+      />
     </>
   )
 }

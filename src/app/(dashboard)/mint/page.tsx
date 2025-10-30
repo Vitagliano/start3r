@@ -1,5 +1,6 @@
 import { MintNFT } from "@/components/web3/mint-nft"
 import { Card, CardContent } from "@/components/ui/card"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function MintPage() {
   return (
@@ -41,6 +42,11 @@ export default function MintPage() {
           </CardContent>
         </Card>
       </div>
+
+      <CodeSection
+        title="Copy the MintNFT component"
+        file="src/components/web3/mint-nft.tsx"
+      />
     </>
   )
 }

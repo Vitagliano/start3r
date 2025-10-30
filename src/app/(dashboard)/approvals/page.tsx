@@ -1,5 +1,6 @@
 import { ApprovalsManager } from "@/components/web3/approvals-manager"
 import { Card, CardContent } from "@/components/ui/card"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function ApprovalsPage() {
   return (
@@ -40,6 +41,11 @@ export default function ApprovalsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <CodeSection
+        title="Copy the ApprovalsManager component"
+        file="src/components/web3/approvals-manager.tsx"
+      />
     </>
   )
 }

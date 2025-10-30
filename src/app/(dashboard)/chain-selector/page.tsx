@@ -1,4 +1,5 @@
 import { ChainSelectorShowcase } from "@/components/web3/showcases/chain-selector-showcase"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function ChainSelectorPage() {
   return (
@@ -11,6 +12,11 @@ export default function ChainSelectorPage() {
       <div className="animate-in fade-in duration-300">
         <ChainSelectorShowcase />
       </div>
+
+      <CodeSection
+        title="Copy the ChainSelector component"
+        file="src/components/web3/chain-selector.tsx"
+      />
     </>
   )
 }

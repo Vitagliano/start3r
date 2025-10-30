@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { Web3Provider } from "@/components/providers/web3";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -29,7 +30,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        {children}
+        <Web3Provider>
+          {children}
+        </Web3Provider>
         <Analytics />
       </body>
     </html>

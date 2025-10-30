@@ -5,6 +5,7 @@ import { NftGallery } from "@/components/web3/nft-gallery"
 import { AddressInput } from "@/components/web3/address-input"
 import { generateMockNFTs } from "@/lib/mock-data-generator"
 import { Card, CardContent } from "@/components/ui/card"
+import { ClientCodeSection } from "@/components/code/ClientCodeSection"
 
 export default function NFTsPage() {
   const [currentAddress, setCurrentAddress] = useState<string | null>(null)
@@ -65,6 +66,11 @@ export default function NFTsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <ClientCodeSection
+        title="Copy the NftGallery component"
+        file="src/components/web3/nft-gallery.tsx"
+      />
     </>
   )
 }

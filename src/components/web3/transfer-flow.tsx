@@ -1,58 +1,72 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { BookUser, CheckCircle2 } from "lucide-react"
-import { PaperPlaneIcon } from "@radix-ui/react-icons"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { BookUser, CheckCircle2 } from "lucide-react";
+import { PaperPlaneIcon } from "@radix-ui/react-icons";
 
 interface AddressBookEntry {
-  name: string
-  address: string
-  ens?: string
+  name: string;
+  address: string;
+  ens?: string;
 }
 
 const mockAddressBook: AddressBookEntry[] = [
   { name: "Alice", address: "0x1234...5678", ens: "alice.eth" },
   { name: "Bob", address: "0xabcd...efgh", ens: "bob.eth" },
   { name: "Charlie", address: "0x9876...5432" },
-]
+];
 
 export function TransferFlow() {
-  const [recipient, setRecipient] = useState("")
-  const [amount, setAmount] = useState("")
-  const [selectedToken, setSelectedToken] = useState("ETH")
-  const [ensResolved, setEnsResolved] = useState<string | null>(null)
+  const [recipient, setRecipient] = useState("");
+  const [amount, setAmount] = useState("");
+  const [selectedToken, setSelectedToken] = useState("ETH");
+  const [ensResolved, setEnsResolved] = useState<string | null>(null);
 
   const handleEnsLookup = async (value: string) => {
-    setRecipient(value)
+    setRecipient(value);
     if (value.endsWith(".eth")) {
       // Simulate ENS resolution
       setTimeout(() => {
-        setEnsResolved("0x1234...5678")
-      }, 500)
+        setEnsResolved("0x1234...5678");
+      }, 500);
     } else {
-      setEnsResolved(null)
+      setEnsResolved(null);
     }
-  }
+  };
 
   const handleAddressBookSelect = (entry: AddressBookEntry) => {
-    setRecipient(entry.ens || entry.address)
+    setRecipient(entry.ens || entry.address);
     if (entry.ens) {
-      setEnsResolved(entry.address)
+      setEnsResolved(entry.address);
     }
-  }
+  };
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Transfer Assets</CardTitle>
-        <CardDescription>Send tokens or NFTs to another address</CardDescription>
+        <CardDescription>
+          Send tokens or NFTs to another address
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="token" className="space-y-6">
@@ -92,10 +106,6 @@ export function TransferFlow() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="recipient">Recipient Address</Label>
-                  <Button variant="ghost" size="sm" className="h-auto gap-1 p-0 text-xs">
-                    <BookUser className="h-3 w-3" />
-                    Address Book
-                  </Button>
                 </div>
                 <Input
                   id="recipient"
@@ -120,10 +130,11 @@ export function TransferFlow() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleAddressBookSelect(entry)}
-                      className="gap-2"
-                    >
+                      className="gap-2">
                       {entry.name}
-                      {entry.ens && <Badge variant="secondary">{entry.ens}</Badge>}
+                      {entry.ens && (
+                        <Badge variant="secondary">{entry.ens}</Badge>
+                      )}
                     </Button>
                   ))}
                 </div>
@@ -177,5 +188,5 @@ export function TransferFlow() {
         </Tabs>
       </CardContent>
     </Card>
-  )
+  );
 }

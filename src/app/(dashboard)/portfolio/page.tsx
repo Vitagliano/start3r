@@ -5,6 +5,7 @@ import { TokenPortfolio } from "@/components/web3/token-portfolio"
 import { AddressInput } from "@/components/web3/address-input"
 import { generateMockTokens } from "@/lib/mock-data-generator"
 import { Card, CardContent } from "@/components/ui/card"
+import { ClientCodeSection } from "@/components/code/ClientCodeSection"
 
 export default function PortfolioPage() {
   const [currentAddress, setCurrentAddress] = useState<string | null>(null)
@@ -65,6 +66,11 @@ export default function PortfolioPage() {
           </CardContent>
         </Card>
       </div>
+
+      <ClientCodeSection
+        title="Copy the TokenPortfolio component"
+        file="src/components/web3/token-portfolio.tsx"
+      />
     </>
   )
 }

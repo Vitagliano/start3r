@@ -1,4 +1,5 @@
 import { BalanceQuickSelectShowcase } from "@/components/web3/showcases/balance-quick-select-showcase"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function BalanceQuickSelectPage() {
   return (
@@ -13,6 +14,11 @@ export default function BalanceQuickSelectPage() {
       <div className="animate-in fade-in duration-300">
         <BalanceQuickSelectShowcase />
       </div>
+
+      <CodeSection
+        title="Copy the BalanceQuickSelect component"
+        file="src/components/web3/balance-quick-select.tsx"
+      />
     </>
   )
 }

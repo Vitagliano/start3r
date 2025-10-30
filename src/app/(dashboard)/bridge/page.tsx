@@ -1,5 +1,6 @@
 import { BridgeComponent } from "@/components/web3/bridge-component"
 import { Card, CardContent } from "@/components/ui/card"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function BridgePage() {
   return (
@@ -40,6 +41,11 @@ export default function BridgePage() {
           </CardContent>
         </Card>
       </div>
+
+      <CodeSection
+        title="Copy the BridgeComponent component"
+        file="src/components/web3/bridge-component.tsx"
+      />
     </>
   )
 }

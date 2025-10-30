@@ -1,5 +1,6 @@
 import { SwapComponent } from "@/components/web3/swap-component"
 import { Card, CardContent } from "@/components/ui/card"
+import { CodeSection } from "@/components/code/CodeSection"
 
 export default function SwapPage() {
   return (
@@ -40,6 +41,8 @@ export default function SwapPage() {
           </CardContent>
         </Card>
       </div>
+
+      <CodeSection title="Copy the SwapComponent component" file="src/components/web3/swap-component.tsx" />
     </>
   )
 }
