@@ -2,13 +2,14 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle2 } from "lucide-react"
 import { MagnifyingGlassIcon, ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { useEnsAddress } from "wagmi"
 
 interface AddressInputProps {
   onAddressSubmit: (address: string) => void
@@ -26,6 +27,13 @@ const EXAMPLE_ADDRESSES = [
 export function AddressInput({ onAddressSubmit, isLoading, currentAddress }: AddressInputProps) {
   const [address, setAddress] = useState("")
   const [validationState, setValidationState] = useState<"idle" | "valid" | "invalid">("idle")
+
+  const isEns = useMemo(() => /\.[eE][tT][hH]$/.test(currentAddress || ""), [currentAddress])
+  const { data: resolvedCurrentAddress } = useEnsAddress({
+    name: isEns && currentAddress ? currentAddress : undefined,
+    chainId: 1,
+    query: { enabled: isEns && !!currentAddress }
+  })
 
   const validateAddress = (addr: string) => {
     // Ethereum address validation (0x + 40 hex characters)
@@ -112,7 +120,12 @@ export function AddressInput({ onAddressSubmit, isLoading, currentAddress }: Add
           {currentAddress && (
             <div className="rounded-lg bg-muted p-3">
               <div className="text-xs text-muted-foreground">Currently viewing:</div>
-              <div className="font-mono text-sm font-medium">{currentAddress}</div>
+              <div className="font-mono text-sm font-medium">
+                {currentAddress}
+                {isEns && resolvedCurrentAddress ? (
+                  <span className="ml-2 text-xs opacity-70">({resolvedCurrentAddress})</span>
+                ) : null}
+              </div>
             </div>
           )}
 

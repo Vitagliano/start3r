@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,6 +22,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { BookUser, CheckCircle2 } from "lucide-react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { useEnsAddress } from "wagmi";
 
 interface AddressBookEntry {
   name: string;
@@ -39,25 +40,18 @@ export function TransferFlow() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedToken, setSelectedToken] = useState("ETH");
-  const [ensResolved, setEnsResolved] = useState<string | null>(null);
-
-  const handleEnsLookup = async (value: string) => {
-    setRecipient(value);
-    if (value.endsWith(".eth")) {
-      // Simulate ENS resolution
-      setTimeout(() => {
-        setEnsResolved("0x1234...5678");
-      }, 500);
-    } else {
-      setEnsResolved(null);
-    }
-  };
+  const isEns = useMemo(
+    () => /\.[eE][tT][hH]$/.test(recipient || ""),
+    [recipient]
+  );
+  const { data: resolvedRecipient } = useEnsAddress({
+    name: isEns && recipient ? recipient : undefined,
+    chainId: 1,
+    query: { enabled: isEns && !!recipient },
+  });
 
   const handleAddressBookSelect = (entry: AddressBookEntry) => {
     setRecipient(entry.ens || entry.address);
-    if (entry.ens) {
-      setEnsResolved(entry.address);
-    }
   };
 
   return (
@@ -111,12 +105,12 @@ export function TransferFlow() {
                   id="recipient"
                   placeholder="0x... or name.eth"
                   value={recipient}
-                  onChange={(e) => handleEnsLookup(e.target.value)}
+                  onChange={(e) => setRecipient(e.target.value)}
                 />
-                {ensResolved && (
+                {resolvedRecipient && (
                   <div className="flex items-center gap-2 text-sm text-accent">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>Resolved to {ensResolved}</span>
+                    <span>Resolved to {resolvedRecipient}</span>
                   </div>
                 )}
               </div>
@@ -169,12 +163,12 @@ export function TransferFlow() {
                   id="nft-recipient"
                   placeholder="0x... or name.eth"
                   value={recipient}
-                  onChange={(e) => handleEnsLookup(e.target.value)}
+                  onChange={(e) => setRecipient(e.target.value)}
                 />
-                {ensResolved && (
+                {resolvedRecipient && (
                   <div className="flex items-center gap-2 text-sm text-accent">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>Resolved to {ensResolved}</span>
+                    <span>Resolved to {resolvedRecipient}</span>
                   </div>
                 )}
               </div>
